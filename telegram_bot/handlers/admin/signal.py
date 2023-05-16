@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from aiogram.utils.exceptions import ChatNotFound
+from aiogram.utils.exceptions import ChatNotFound, CantInitiateConversation
 from .states import _ProfileStatesGroup
 from ...bot_config import dp, bot, ADMIN
 from database import Database
@@ -65,7 +65,7 @@ async def mailing(message: types.Message, state=FSMContext) -> None:
                 await bot.send_message(
                     chat_id=int(user), text=edit_text
                 )
-            except ChatNotFound:
+            except (ChatNotFound, CantInitiateConversation):
                 username = db.get_one_data_cell(
                     f"SELECT nickname FROM subscribers WHERE chat_id = '{user}';"
                 )
